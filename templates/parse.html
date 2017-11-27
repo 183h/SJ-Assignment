@@ -3,25 +3,31 @@
 <div class="container-fluid">
   <div class="row">
   	<table class="table">
-  	  <thead>
-  	    <tr>
-  	      <th scope="col">Run</th>
-  	      <th scope="col">Input</th>
-  	      <th scope="col">Action</th>
-  	      <th scope="col">Stack</th>
-  	    </tr>
-  	  </thead>
-  	  <tbody>
+  	  	<thead>
+  	    	<tr>
+  	      	<th scope="col">Run</th>
+  	      	<th scope="col">Input</th>
+  	      	<th scope="col">Action</th>
+  	      	<th scope="col">Stack</th>
+  	    	</tr>
+  	  	</thead>
+  	  	<tbody>
   	  	{% for i in data %}
-  	  	<tr>
-  	  	  <th scope="row">{{ i }}</th>
-  	  	  <td>{{ data[i]["input"]|join('') }}</td>
-  	  	  <td>{{ data[i]["rules"] }}</td>
-  	  	  <td>{{ data[i]["stack"]|join(' ') }}</td>
-  	  	</tr>
-  				
+  	  		{% if data[i]["rules"] == "Matched" %}
+  	  			<tr class="table-success">
+  	  		{% elif "not exist" in data[i]["rules"] or "Not matched, pushed back to stack" in data[i]["rules"] %}
+  	  			<tr class="table-danger">
+  	  		{% else %}
+  	  			<tr>
+  	  		{% endif %}
+
+  			<th scope="row">{{ i }}</th>
+  	  	  	<td>{{ data[i]["input"]|join('') }}</td>
+  	  	    <td>{{ data[i]["rules"] }}</td>
+  	  	  	<td>{{ data[i]["stack"]|join(' ') }}</td>
+  	  		</tr>
 		{% endfor %}
-  	  </tbody>
+  	  	</tbody>
   	</table>
   </div>
 </div>
