@@ -1,16 +1,18 @@
-from Tkinter import *
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
 
 
-class Application(Frame):
-    def createWidgets(self):
-        pass
+@app.route("/")
+def main():
+    return render_template('main.html')
 
-    def __init__(self, master=None):
-        Frame.__init__(self, master)
-        self.pack()
-        self.createWidgets()
 
-root = Tk()
-app = Application(master=root)
-app.mainloop()
-root.destroy()
+@app.route("/parse", methods=['POST'])
+def parse():
+    q = request.form.get('q', default="", type=str)
+
+    return render_template(
+        'parse.html',
+        q=q
+    )
