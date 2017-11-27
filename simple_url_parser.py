@@ -1,7 +1,6 @@
 from __future__ import print_function
 from transition_table import table
 from simple_url_lexer import SimpleUrlLexer
-from re import sub
 
 
 class SimpleUrlParser(object):
