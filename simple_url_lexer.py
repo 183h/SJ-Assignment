@@ -10,7 +10,7 @@ class SimpleUrlLexer(object):
     t_QUESTION = r'\?'
     t_AT = r'@'
     t_COLON = r':'
-    t_DOT = r'.'
+    t_DOT = r'\.'
     t_SLASH = r'/'
     t_PLUS = r'\+'
     t_DIGIT = r'[0-9]'
@@ -47,7 +47,9 @@ class SimpleUrlLexer(object):
         self.output = []
         self._lexer = lex.lex(module=self, **kwargs)
 
-    def lexical_analysis(self, file):
+    def file_lexical_analysis(self, file):
+        self.output = []
+
         for line in file:
             try:
                 lex_input = line + "$"
@@ -61,8 +63,10 @@ class SimpleUrlLexer(object):
                     break
                 self.output.append(token)
 
-    def lexical_analysis1(self, input):
+    def simple_input_lexical_analysis(self, input):
+        self.output = []
         self._lexer.input(input + "$")
+
         while True:
             token = self._lexer.token()
             if not token:
@@ -74,4 +78,4 @@ if __name__ == '__main__':
     lexer.build()
 
     file = open('/home/pukes/Projects/SJ/SJ-Assignment/subor', 'r')
-    lexer.lexical_analysis(file)
+    lexer.file_lexical_analysis(file)
