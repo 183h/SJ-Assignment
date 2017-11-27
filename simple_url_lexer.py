@@ -3,7 +3,7 @@ import ply.lex as lex
 
 class SimpleUrlLexer(object):
     tokens = (
-        'QUESTION', 'AT', 'COLON', 'DOT', 'SLASH', 'PLUS', 'DIGIT', 'NAME', 'HTTP', 'TELNET', 'MAILTO', 'FTP'
+        'QUESTION', 'AT', 'COLON', 'DOT', 'SLASH', 'PLUS', 'DIGIT', 'NAME', 'HTTP', 'TELNET', 'MAILTO', 'FTP', 'DOLLAR'
     )
 
     # Tokens
@@ -13,7 +13,8 @@ class SimpleUrlLexer(object):
     t_DOT = r'.'
     t_SLASH = r'/'
     t_PLUS = r'\+'
-    t_DIGIT = r'[0-9][0-9]*'
+    t_DIGIT = r'[0-9]'
+    t_DOLLAR = r'\$'
 
     # Ignored characters
     t_ignore = ' \t\n'
@@ -31,11 +32,11 @@ class SimpleUrlLexer(object):
         return t
 
     def t_FTP(self, t):
-        r'FTP://'
+        r'ftp://'
         return t
 
     def t_NAME(self, t):
-        r'[a-zA-Z][a-zA-Z]*'
+        r'[a-zA-Z]'
         return t
 
     def t_error(self, t):
@@ -49,7 +50,7 @@ class SimpleUrlLexer(object):
     def lexical_analysis(self, file):
         for line in file:
             try:
-                lex_input = line
+                lex_input = line + "$"
             except EOFError:
                 break
 
