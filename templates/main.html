@@ -17,6 +17,11 @@
         #jumbo {
             padding: 50px;
         }
+
+        mark {
+            background-color: red;
+            color: black;
+        }
     </style>
 </head>
 
@@ -25,13 +30,29 @@
   <div class="row">
     <div class="col"></div>
     <div class="col-8" style="padding-top: 30px; padding-bottom: 20px">
-            <div class="input-group input-group-lg">
-                <span class="input-group-addon" id="i1">Input: </span>
-                <input type="text" class="form-control" aria-describedby="basic-addon1" name="q" value="{{ q }}">
-            </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="i1">Input: </span>
+            <input type="text" class="form-control" aria-describedby="basic-addon1" name="q" value="{{ q }}">
+        </div>
     </div>
     <div class="col"></div>
   </div>
+</div>
+
+<hr />
+
+{% if error %}
+<div style="background-color: #ff8566">
+    NOT VALID
+    <br>
+    {{ result|safe }}
+    <br>
+    At indexes:
+    {{ error|join(', ') }}
+{% else %}
+<div style="background-color: #b3ff99">
+    VALID
+{% endif %}
 </div>
 
 <hr />
