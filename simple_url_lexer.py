@@ -2,18 +2,14 @@ import ply.lex as lex
 
 
 class SimpleUrlLexer(object):
-    keywords = (
-        'http', 'ftp', 'telnet', 'mailto'
-    )
-
-    tokens = keywords + (
-        'QUESTION', 'AT', 'DVOJBODKA', 'DOT', 'SLASH', 'PLUS', 'DIGIT', 'NAME'
+    tokens = (
+        'QUESTION', 'AT', 'COLON', 'DOT', 'SLASH', 'PLUS', 'DIGIT', 'NAME', 'HTTP', 'TELNET', 'MAILTO', 'FTP'
     )
 
     # Tokens
     t_QUESTION = r'\?'
     t_AT = r'@'
-    t_DVOJBODKA = r':'
+    t_COLON = r':'
     t_DOT = r'.'
     t_SLASH = r'/'
     t_PLUS = r'\+'
@@ -22,10 +18,24 @@ class SimpleUrlLexer(object):
     # Ignored characters
     t_ignore = ' \t\n'
 
+    def t_HTTP(self, t):
+        r'http://'
+        return t
+
+    def t_TELNET(self, t):
+        r'telnet://'
+        return t
+
+    def t_MAILTO(self, t):
+        r'mailto::'
+        return t
+
+    def t_FTP(self, t):
+        r'FTP://'
+        return t
+
     def t_NAME(self, t):
         r'[a-zA-Z][a-zA-Z]*'
-        if t.value in self.keywords:  # is this a keyword?
-            t.type = t.value
         return t
 
     def t_error(self, t):
@@ -33,11 +43,10 @@ class SimpleUrlLexer(object):
         t.lexer.skip(1)
 
     def build(self, **kwargs):
+        self.output = []
         self._lexer = lex.lex(module=self, **kwargs)
 
     def lexical_analysis(self, file):
-        print ("Started lexical analysis...")
-
         for line in file:
             try:
                 lex_input = line
@@ -49,9 +58,7 @@ class SimpleUrlLexer(object):
                 token = self._lexer.token()
                 if not token:
                     break
-                print token
-
-        print ("Ended lexical analysis...")
+                self.output.append(token)
 
 if __name__ == '__main__':
     lexer = SimpleUrlLexer()
