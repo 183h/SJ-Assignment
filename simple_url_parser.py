@@ -13,20 +13,14 @@ class SimpleUrlParser(object):
             "search1", "user", "password", "segment", "xalphas", "xalphas1",
             "xalpha", "digits", "digits1", "alpha", "digit"
         ]
-        self.alphas = [
-            "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l",
-            "z", "x", "c", "v", "b", "n", "m", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S",
-            "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M"
-        ]
-        self.digits = [
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-        ]
         self.error_position = []
-
         self.output = {}
+        self.result = ""
 
     def parse(self):
-        print(self.output_lexer)
+        self.output = {}
+        self.result = ""
+        self.error_position = []
         run = 0
         stack = ["$"]
 
@@ -47,7 +41,7 @@ class SimpleUrlParser(object):
 
             # non-terminal
             if last_stack in self.non_terminals:
-                if self.output_lexer[index].value in self.alphas:
+                if self.output_lexer[index].value.isalpha():
                     token_value = "A-Z a-z"
                     if token_value in table[last_stack]:
                         rule = table[last_stack][token_value]
@@ -68,7 +62,7 @@ class SimpleUrlParser(object):
                         index = index + 1
                         stack.append(last_stack)
 
-                elif self.output_lexer[index].value in self.digits:
+                elif self.output_lexer[index].value.isdigit():
                     token_value = "0 .. 9"
                     if token_value in table[last_stack]:
                         rule = table[last_stack][token_value]
@@ -84,7 +78,7 @@ class SimpleUrlParser(object):
                                     stack.append(i)
                             action = "Rule " + last_stack + " -> " + " ".join(rule)
                     else:
-                        action = "Rule " + token_value + "->" + self.output_lexer[index].value + "not exists"
+                        action = "Rule " + token_value + " -> " + self.output_lexer[index].value + " not exists"
                         self.error_position.append(self.output_lexer[index])
                         index = index + 1
                         stack.append(last_stack)
@@ -97,7 +91,7 @@ class SimpleUrlParser(object):
                             stack.append(i)
                     action = "Rule " + last_stack + " -> " + " ".join(rule)
                 else:
-                    action = "Rule " + last_stack + "->" + self.output_lexer[index].value + "not exists"
+                    action = "Rule " + last_stack + " -> " + self.output_lexer[index].value + " not exists"
                     self.error_position.append(self.output_lexer[index])
                     index = index + 1
                     stack.append(last_stack)
@@ -109,6 +103,11 @@ class SimpleUrlParser(object):
                         index = index + 1
                     else:
                         if last_stack == "$":
+                            for r in self.output_lexer:
+                                for e in self.error_position:
+                                    if e.lexpos == r.lexpos:
+                                        r.value = "<mark>" + r.value + "</mark>"
+                            self.result = "".join([r.value for r in self.output_lexer]).replace("$", "")
                             return 1
                         else:
                             self.error_position.append(self.output_lexer[index])
@@ -125,6 +124,9 @@ class SimpleUrlParser(object):
             self.output[run]["input"] = [v.value for v in self.output_lexer[index:]]
             self.output[run]["stack"] = stack[:]
             self.output[run]["rules"] = action
+
+            # for e in self.error_position:
+            #     result[e.]
             # for i in self.output_lexer[index:]:
             #     print(i.value, end='')
             # print ("\nstack", stack)
@@ -135,10 +137,10 @@ if __name__ == '__main__':
     lexer.build()
 
     file = open('/home/pukes/Projects/SJ/SJ-Assignment/subor', 'r')
-    lexer.lexical_analysis(file)
+    lexer.file_lexical_analysis(file)
 
     parser = SimpleUrlParser(lexer.output)
     parser.parse()
 
-    for f in parser.output:
-        print(f, parser.output[f])
+    # for f in parser.error_position:
+    #     print(f)
