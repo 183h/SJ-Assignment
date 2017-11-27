@@ -23,8 +23,13 @@ class SimpleUrlParser(object):
         ]
         self.error_position = []
 
+        self.output = {}
+
     def parse(self):
+        print(self.output_lexer)
+        run = 0
         stack = ["$"]
+
         if self.output_lexer[0].value in table["url"]:
             rule = table["url"][self.output_lexer[0].value].split(' ')
 
@@ -36,6 +41,8 @@ class SimpleUrlParser(object):
 
         index = 0
         while True:
+            run = run + 1
+            action = None
             last_stack = stack.pop()
 
             # non-terminal
@@ -47,14 +54,16 @@ class SimpleUrlParser(object):
 
                         if rule == "A | .. | Z | a | .. | z":
                             stack.append(self.output_lexer[index].value)
+                            action = "Rule alpha -> " + self.output_lexer[index].value
                         else:
                             rule = rule.split(' ')
-                            # print("rule", rule)
 
                             if "epsilon" not in rule:
                                 for i in rule[::-1]:
                                     stack.append(i)
+                            action = "Rule " + last_stack + " -> " + " ".join(rule)
                     else:
+                        action = "Rule " + token_value + "->" + self.output_lexer[index].value + "not exists"
                         self.error_position.append(self.output_lexer[index])
                         index = index + 1
                         stack.append(last_stack)
@@ -66,26 +75,29 @@ class SimpleUrlParser(object):
 
                         if rule == "0 | .. | 9":
                             stack.append(self.output_lexer[index].value)
+                            action = "Rule digit -> " + self.output_lexer[index].value
                         else:
                             rule = rule.split(' ')
-                            # print("rule", rule)
 
                             if "epsilon" not in rule:
                                 for i in rule[::-1]:
                                     stack.append(i)
+                            action = "Rule " + last_stack + " -> " + " ".join(rule)
                     else:
+                        action = "Rule " + token_value + "->" + self.output_lexer[index].value + "not exists"
                         self.error_position.append(self.output_lexer[index])
                         index = index + 1
                         stack.append(last_stack)
 
                 elif self.output_lexer[index].value in table[last_stack]:
                     rule = table[last_stack][self.output_lexer[index].value].split(' ')
-                    # print("rule", rule)
 
                     if "epsilon" not in rule:
                         for i in rule[::-1]:
                             stack.append(i)
+                    action = "Rule " + last_stack + " -> " + " ".join(rule)
                 else:
+                    action = "Rule " + last_stack + "->" + self.output_lexer[index].value + "not exists"
                     self.error_position.append(self.output_lexer[index])
                     index = index + 1
                     stack.append(last_stack)
@@ -102,11 +114,17 @@ class SimpleUrlParser(object):
                             self.error_position.append(self.output_lexer[index])
                             index = index + 1
                             stack.append(last_stack)
+                    action = "Matched"
                 else:
+                    action = "Not matched, pushed back to stack"
                     self.error_position.append(self.output_lexer[index])
                     index = index + 1
                     stack.append(last_stack)
 
+            self.output[run] = {"input": None, "rules": None, "stack": None}
+            self.output[run]["input"] = [v.value for v in self.output_lexer[index:]]
+            self.output[run]["stack"] = stack[:]
+            self.output[run]["rules"] = action
             # for i in self.output_lexer[index:]:
             #     print(i.value, end='')
             # print ("\nstack", stack)
@@ -121,3 +139,6 @@ if __name__ == '__main__':
 
     parser = SimpleUrlParser(lexer.output)
     parser.parse()
+
+    for f in parser.output:
+        print(f, parser.output[f])
