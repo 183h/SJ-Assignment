@@ -2,14 +2,27 @@
 {% block body %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col">
-    </div>
-    
-    <div class="col">
-    </div>
-    
-    <div class="col">             
-    </div>
+  	<table class="table">
+  	  <thead>
+  	    <tr>
+  	      <th scope="col">Run</th>
+  	      <th scope="col">Input</th>
+  	      <th scope="col">Action</th>
+  	      <th scope="col">Stack</th>
+  	    </tr>
+  	  </thead>
+  	  <tbody>
+  	  	{% for i in data %}
+  	  	<tr>
+  	  	  <th scope="row">{{ i }}</th>
+  	  	  <td>{{ data[i]["input"]|join('') }}</td>
+  	  	  <td>{{ data[i]["rules"] }}</td>
+  	  	  <td>{{ data[i]["stack"]|join(' ') }}</td>
+  	  	</tr>
+  				
+		{% endfor %}
+  	  </tbody>
+  	</table>
   </div>
 </div>
 {% endblock %}
