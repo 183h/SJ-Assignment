@@ -61,6 +61,14 @@ class SimpleUrlLexer(object):
                     break
                 self.output.append(token)
 
+    def lexical_analysis1(self, input):
+        self._lexer.input(input + "$")
+        while True:
+            token = self._lexer.token()
+            if not token:
+                break
+            self.output.append(token)
+
 if __name__ == '__main__':
     lexer = SimpleUrlLexer()
     lexer.build()
