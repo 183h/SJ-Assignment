@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from transition_table import table
 from simple_url_parser import SimpleUrlParser
 from simple_url_lexer import SimpleUrlLexer
 
@@ -17,7 +16,7 @@ def main():
 def parse():
     q = request.form.get('q', default="", type=str)
 
-    lexer.lexical_analysis1(q)
+    lexer.simple_input_lexical_analysis(q)
 
     parser = SimpleUrlParser(lexer.output)
     parser.parse()
@@ -25,5 +24,7 @@ def parse():
     return render_template(
         'parse.html',
         q=q,
-        data=parser.output
+        data=parser.output,
+        result=parser.result,
+        error=[e.lexpos for e in parser.error_position]
     )
