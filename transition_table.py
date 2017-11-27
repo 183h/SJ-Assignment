@@ -58,7 +58,7 @@ table = {
 
     },
     "port": {
-         "0 .. 9": "digits"
+        "0 .. 9": "digits"
     },
     "path": {
         "?": "segment path1",
