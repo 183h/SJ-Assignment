@@ -40,12 +40,15 @@ class SimpleUrlLexer(object):
         return t
 
     def t_error(self, t):
-        print ("Illegal character {0} at line {1}".format(t.value[0], t.lineno))
+        t.value = t.value[0]
+        self.errors.append(t)
+        # print ("Illegal character {0} at line {1}".format(t.value, t.lineno))
         t.lexer.skip(1)
 
     def build(self, **kwargs):
         self.output = []
         self._lexer = lex.lex(module=self, **kwargs)
+        self.errors = []
 
     def file_lexical_analysis(self, file):
         self.output = []
@@ -66,6 +69,7 @@ class SimpleUrlLexer(object):
     def simple_input_lexical_analysis(self, input):
         self.output = []
         self._lexer.input(input + "$")
+        self.errors = []
 
         while True:
             token = self._lexer.token()
