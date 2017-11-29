@@ -35,27 +35,27 @@
             <input type="text" class="form-control" aria-describedby="basic-addon1" name="q" value="{{ q }}">
         </div>
     </div>
-    <div class="col"></div>
+    <div class="col">
+        <!-- Button trigger modal -->
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+          Transition table
+        </button> -->
+    </div>
   </div>
-</div>
-
-<hr />
-
-{% if error %}
-<div style="background-color: #ff8566">
-    NOT VALID
-    <br>
-    {{ result|safe }}
-    <br>
-    At indexes:
-    {{ error|join(', ') }}
-{% else %}
-<div style="background-color: #b3ff99">
-    VALID
-{% endif %}
 </div>
 
 <hr />
 
 {% block body %}{% endblock %}
 </form>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        ...
+      </div>
+    </div>
+  </div>
+</div>
