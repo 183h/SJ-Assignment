@@ -34,7 +34,7 @@ def parse():
         )
 
     parser = SimpleUrlParser(lexer.output)
-    parser.parse(lexer.errors)
+    parser.parse()
 
     return render_template(
         'parse.html',
