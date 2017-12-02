@@ -2,7 +2,7 @@
 {% block body %}
 
 {% if error %}
-<div style="background-color: #ff8566">
+<div style="background-color: #ffb3b3; padding-left: 30px">
     NOT VALID
     <br>
     {{ result|safe }}
@@ -10,7 +10,7 @@
     At indexes:
     {{ error|join(', ') }}
 {% else %}
-<div style="background-color: #b3ff99">
+<div style="background-color: #b3ff99; padding-left: 30px">
     VALID
 {% endif %}
 </div>
